@@ -1,0 +1,48 @@
+service: ak-expenses-tracker
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    DYNAMODB_TABLE: ExpensesTable
+
+functions:
+  addExpense:
+    handler: handler.addExpense
+    events:
+      - http:
+          path: expenses
+          method: post
+  getExpenses:
+    handler: handler.getExpenses
+    events:
+      - http:
+          path: expenses
+          method: get
+  updateExpense:
+    handler: handler.updateExpense
+    events:
+      - http:
+          path: expenses/{id}
+          method: put
+  deleteExpense:
+    handler: handler.deleteExpense
+    events:
+      - http:
+          path: expenses/{id}
+          method: delete
+
+resources:
+  Resources:
+    ExpensesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
