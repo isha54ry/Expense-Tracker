@@ -29,7 +29,5 @@ API Endpoints:
 - **DELETE**: [Delete Expense](https://65dce73iq9.execute-api.us-east-1.amazonaws.com/dev/expenses/{id}) - Remove an expense from your records by using its ID.
 
 
-## Live Version
-Access the live application [here](https://65dce73iq9.execute-api.us-east-1.amazonaws.com/dev/expenses).
 
 
