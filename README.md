@@ -66,9 +66,11 @@ After deploying, you'll get the API Gateway endpoints for your Lambda functions.
      - **Note**: A description or additional details about the expense (optional).
    - Once you’ve filled in the details, click the "Add Expense" button. The expense will be added to the backend system and displayed on the screen.
      
-Here's a sample of my code running perfectly fine
-![Screenshot (1)](https://github.com/user-attachments/assets/ef1a1394-3e6f-4dd3-8019-1ff1cea89309)
+Here's a sample of my code running perfectly fine on the terminal, although I keep updating my work as I learn more!
+
+![Screenshot 2025-05-08 004612](https://github.com/user-attachments/assets/7ba8ee68-c861-4da3-a52c-863d9015796c)
 
 
-   
+   <img width="344" alt="Screenshot 2025-05-08 004537" src="https://github.com/user-attachments/assets/e89f42d0-6127-4e96-bbaf-501e55140b88" />
+
 
