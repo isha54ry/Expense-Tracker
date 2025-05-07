@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# Expense Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple **Expense Tracker** project built with React for the frontend and deployed using AWS Lambda and DynamoDB for the backend. It helps users track their expenses, add, view, and delete entries in a user-friendly interface.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Add Expense:** Allows users to add a new expense entry with details such as amount, category, date, and note.
+- **View Expenses:** Displays the list of expenses for a specific user.
+- **Delete Expense:** Lets users remove an expense entry.
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend:** React, Axios
+- **Backend:** AWS Lambda, API Gateway, DynamoDB
+- **Styling:** CSS for layout, Bootstrap or other libraries for UI
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Before getting started, make sure you have the following installed:
 
-### `npm run build`
+- **Node.js** (v14.x or higher)  
+- **AWS CLI** (for deployment)
+- **Serverless Framework** (for deployment)
+- **Git** (for version control)
+- **npm** or **yarn** (for package management)
+- 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/expense-tracker.git
+   cd expense-tracker
+   Obtain your API URLs:
+After deploying, you'll get the API Gateway endpoints for your Lambda functions. These endpoints are needed for the frontend to communicate with the backend.
+2. **Obtain your API URLs:**  
+   After deploying, you will get the API Gateway endpoints for your Lambda functions. These URLs are necessary for the frontend to communicate with the backend. Check the output in your terminal for the API URLs.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Update the Frontend API Configuration:**  
+   In the `frontend/src/api.js` file, replace the placeholder URLs with the actual API Gateway endpoints you obtained after deployment. The URLs should look similar to:
 
-### `npm run eject`
+   ```js
+   const API = {
+     addExpenseUrl: "https://<api-id>.execute-api.<region>.amazonaws.com/dev/add-expense",
+     getExpensesUrl: "https://<api-id>.execute-api.<region>.amazonaws.com/dev/get-expenses",
+     deleteExpenseUrl: "https://<api-id>.execute-api.<region>.amazonaws.com/dev/delete-expense",
+   };
+4. **Start the Frontend Development Server:**  
+   Once the API URLs are updated, navigate to the `frontend` directory and run the following command to start the development server:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   ```bash
+   npm start
+5. **Access the Expense Tracker Application:**  
+   Once the development server is up, open your browser and go to `http://localhost:3000`. You should see the Expense Tracker application running and accessible.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+6. **Enter a User ID:**  
+   When prompted, enter a `userId`. This is a unique identifier for each user. You can input any random string for testing purposes (e.g., `user123` or `exampleUserId`). This helps differentiate between different users' expenses within the application.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+7. **Add Expenses:**  
+   - After entering the `userId`, you can add your expenses by filling out the expense form. The form requires the following fields:
+     - **Amount**: The amount of the expense.
+     - **Category**: The type of the expense (e.g., Food, Travel, Entertainment, etc.).
+     - **Date**: The date the expense was made.
+     - **Note**: A description or additional details about the expense (optional).
+   - Once you’ve filled in the details, click the "Add Expense" button. The expense will be added to the backend system and displayed on the screen.
+     
+Here's a sample of my code running perfectly fine
+![Screenshot (1)](https://github.com/user-attachments/assets/ef1a1394-3e6f-4dd3-8019-1ff1cea89309)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+   
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
