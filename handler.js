@@ -1,137 +1,74 @@
+'use strict';
+
+const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
-const uuid = require('uuid');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-const TABLE_NAME = process.env.DYNAMODB_TABLE;
+const TABLE = 'expenses-tracker-frontend-isha';
 
-// Validate input
-const validateInput = (data) => {
-  if (!data.title || !data.amount || !data.date || !data.category) {
-    throw new Error('Missing required fields: title, amount, date, category');
-  }
-};
-
-// Add an expense
 module.exports.addExpense = async (event) => {
-  const data = JSON.parse(event.body);
-  
-  try {
-    validateInput(data);
-  } catch (error) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: error.message }),
-    };
-  }
+  const { userId, amount, category, date, note } = JSON.parse(event.body);
+  const expenseId = uuidv4();
 
-  const expense = {
-    id: uuid.v4(),
-    title: data.title,
-    amount: parseFloat(data.amount),
-    date: data.date,
-    category: data.category,
+  const item = {
+    userId,
+    expenseId,
+    amount,
+    category,
+    date,
+    note,
   };
 
-  const params = {
-    TableName: TABLE_NAME,
-    Item: expense,
-  };
+  await dynamoDb.put({
+    TableName: TABLE,
+    Item: item,
+  }).promise();
 
-  try {
-    await dynamoDb.put(params).promise();
-    return {
-      statusCode: 201,
-      body: JSON.stringify(expense),
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Could not add expense' }),
-    };
-  }
-};
-
-// Get all expenses or filter by date
-module.exports.getExpenses = async (event) => {
-  const params = {
-    TableName: TABLE_NAME,
-  };
-
-  const { startDate, endDate } = event.queryStringParameters || {};
-
-  if (startDate && endDate) {
-    params.FilterExpression = 'date BETWEEN :startDate AND :endDate';
-    params.ExpressionAttributeValues = {
-      ':startDate': startDate,
-      ':endDate': endDate,
-    };
-  }
-
-  try {
-    const result = await dynamoDb.scan(params).promise();
-    return {
-      statusCode: 200,
-      body: JSON.stringify(result.Items),
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Could not retrieve expenses' }),
-    };
-  }
-};
-
-// Update an expense
-module.exports.updateExpense = async (event) => {
-  const data = JSON.parse(event.body);
-  const { id, title, amount, date, category } = data;
-
-  const params = {
-    TableName: TABLE_NAME,
-    Key: { id },
-    UpdateExpression: 'set title = :title, amount = :amount, date = :date, category = :category',
-    ExpressionAttributeValues: {
-      ':title': title,
-      ':amount': parseFloat(amount),
-      ':date': date,
-      ':category': category,
+  return {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "*",
     },
-    ReturnValues: 'ALL_NEW',
+    body: JSON.stringify({ message: 'Expense added', item }),
   };
-
-  try {
-    const result = await dynamoDb.update(params).promise();
-    return {
-      statusCode: 200,
-      body: JSON.stringify(result.Attributes),
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Could not update expense' }),
-    };
-  }
 };
 
-// Delete an expense
-module.exports.deleteExpense = async (event) => {
-  const { id } = event.pathParameters;
+module.exports.getExpenses = async (event) => {
+  const userId = event.queryStringParameters.userId;
 
-  const params = {
-    TableName: TABLE_NAME,
-    Key: { id },
+  const result = await dynamoDb.query({
+    TableName: TABLE,
+    KeyConditionExpression: 'userId = :uid',
+    ExpressionAttributeValues: {
+      ':uid': userId,
+    },
+  }).promise();
+
+  return {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "*",
+    },
+    body: JSON.stringify(result.Items),
   };
+};
 
-  try {
-    await dynamoDb.delete(params).promise();
-    return {
-      statusCode: 204,
-      body: null,
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Could not delete expense' }),
-    };
-  }
+module.exports.deleteExpense = async (event) => {
+  const { userId, expenseId } = JSON.parse(event.body);
+
+  await dynamoDb.delete({
+    TableName: TABLE,
+    Key: { userId, expenseId },
+  }).promise();
+
+  return {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "*",
+    },
+    body: JSON.stringify({ message: 'Expense deleted' }),
+  };
 };
